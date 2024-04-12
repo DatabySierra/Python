@@ -1,0 +1,73 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Mar 12 22:26:15 2023
+
+@author: Sierra Henry
+"""
+##Project Questions
+#%%
+import numpy as np
+##1. Load the red wine quality data set (red wine quality.csv Download red wine quality.csv), name the data frame as ‘wine’.
+import pandas as pd
+wine=pd.read_csv('red wine quality.csv')
+print(wine)
+#%%
+##2. Find the shape and columns of the data frame wine. Print the first 10 rows.
+print(wine.shape)
+print(wine.head(10))
+#%%
+##3. Use the describe( ) method to show the summary statistics of the data frame wine.
+print(wine.describe())
+#%%
+##4. Delete the rows with missing data in the data frame wine.
+wine=wine.dropna()
+print(wine)
+#%%
+##5. Plot a histogram for each numeric variable, and save the figure as ‘histogram.png’.
+import matplotlib.pyplot as plt 
+plt.figure()
+wine.plot.hist()
+plt.show()
+plt.savefig('histogram.png')
+#%%
+##6. Create a scatter plot of pH and alcohol with color= quality. Save the figure as ‘scatter plot.png’.
+wine.plot.scatter(x='pH', y='alcohol', c='quality')
+plt.show()
+plt.savefig('scatter plot.png')
+#%%
+##7. Define a function called ‘quality_level’ to find the level of a wine quality: if quality= 3 or 4, quality_level=poor; if quality= 5 or 6, quality_level=fair; if quality=7 or 8, quality_level=good.
+def quality_level(quality):
+    qualitylevel=" "
+    if quality ==3 or quality ==4:
+        qualitylevel="poor"
+    elif quality ==5 or quality ==6:
+        qualitylevel= "fair"
+    elif quality ==7 or quality ==8:
+         qualitylevel= "good"
+    return qualitylevel
+#%%
+##8. Use the map function or design a for-loop to find the corresponding quality_level for the variable quality, add the new column called ‘quality_level’ to the data frame wine.
+def add_quality_level(wine:pd.DataFrame):
+    wine["quality_level"]=""
+    for index,frame in wine.iterrows():
+        quality = frame["quality"]
+        qualitylevel=quality_level(quality)
+        wine.at[index, "quality_level"]=qualitylevel
+    return wine
+print(wine)
+wine = add_quality_level(wine)
+print(wine)
+#%%
+##9. Plot pie chart for quality_level with figsize=(10, 10), autopct='%1.2f%%', legend=False. Save the figure as ‘quality pie chart.png’.
+plt.figure()
+wine.quality_level.plot.pie(figsize=(10,10), autopct='%1.2f%%', legend=False)
+plt.show()
+plt.savefig('quality pie chart.png')
+#%%
+##10. Use groupby to group the data frame wine by quality_level. Plot the bar chart of the mean of the grouped data. Save the figure as ‘bar chart.png’.
+grouping_result1 = wine.groupby('quality_level').mean()
+print(grouping_result1)
+plt.figure()
+grouping_result1.plot.bar(y='quality_level')
+plt.show()
+plt.savefig('bar chart.png')
