@@ -1,0 +1,205 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Mar 12 14:20:44 2023
+
+@author: Sierra Henry
+"""
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+# generate normal data
+# seed the random number generator
+np.random.seed(1)
+# generate univariate observations
+data = 5 * np.random.randn(1000) + 50
+# summarize
+print('{0:.3f} {1:.3f}'.format(np.mean(data), np.std(data))) ## 50.194 4.905
+#%%
+#plt.figure(figsize=(8,4))
+plt.hist(data, bins=40)
+plt.title('Histogram for Normality Test', size=20)
+plt.show()
+#%%
+from statsmodels.graphics.gofplots import qqplot 
+# import the qqplot function
+qqplot(data, line='s') 
+# 's' - standardized line, the expected order statistics are scaled by the standard deviation of the given sample and have the mean added to them
+plt.show()
+#%%
+from statsmodels.graphics.gofplots import qqplot 
+from scipy import stats  
+# seed the random number generator
+np.random.seed(1)
+# generate univariate observations
+data = 5 * np.random.randn(100) + 50
+#%%
+# normality test
+stat, p = stats.shapiro(data)
+print('Statistics={0:.3f}, p={1:.3f}'.format(stat, p))
+#%%
+# interpret
+## Statistics=0.992, p=0.822
+alpha = 0.05
+if p > alpha:
+    print('Sample looks normal (fail to reject H0)')
+else:
+    print('Sample does not look normal (reject H0)')
+ 
+## Sample looks normal (fail to reject H0)
+#%%
+from scipy import stats  
+# seed the random number generator
+np.random.seed(1)
+# generate univariate observations
+data = 5 * np.random.randn(100) + 50
+# normality test
+stat, p = stats.normaltest(data)
+print('Statistics={0:.3f}, p={1:.3f}'.format(stat, p))
+# interpret
+## Statistics=0.102, p=0.950
+alpha = 0.05
+if p > alpha:
+    print('Sample looks normal (fail to reject H0)')
+else:
+    print('Sample does not look normal (reject H0)')
+ 
+## Sample looks normal (fail to reject H0)
+#%%
+from scipy import stats  
+# seed the random number generator
+np.random.seed(1)
+# generate univariate observations
+data = 5 * np.random.randn(100) + 50
+# normality test
+result =stats.anderson(data)
+print(result)
+## AndersonResult(statistic=0.21965088555941747, critical_values=array([0.555, 0.632, 0.759, 0.885, 1.053]), significance_level=array([15. , 10. ,  5. ,  2.5,  1. ]))
+#%%
+print('Statistic: {0:.3f}'.format(result.statistic))
+## Statistic: 0.220
+for i in range(len(result.critical_values)):
+    sl, cv = result.significance_level[i], result.critical_values[i]
+    if result.statistic < result.critical_values[i]:
+        print('test statistic {0:.1f} < critical_values {1:.3f}, data looks normal (fail to reject H0)'.format(result.statistic, cv))
+    else:
+        print('test statistic {0:.1f}>= critical_values {1:.3f}, data does not look normal (reject H0)'.format(result.statistic, cv)) 
+## test statistic 0.2 < critical_values 0.555, data looks normal (fail to reject H0)
+## test statistic 0.2 < critical_values 0.632, data looks normal (fail to reject H0)
+## test statistic 0.2 < critical_values 0.759, data looks normal (fail to reject H0)
+## test statistic 0.2 < critical_values 0.885, data looks normal (fail to reject H0)
+## test statistic 0.2 < critical_values 1.053, data looks normal (fail to reject H0)
+#%%
+import  numpy as np
+from scipy import stats
+np.random.seed(7654)  # fix seed to get the same result
+rvs = stats.norm.rvs(loc=5, scale=10, size=20)
+# generate one sample from a normal distribution with loc=mean=5, 
+# scale=standard deviation=10 
+test_result = stats.ttest_1samp(rvs,5.0) # test the mean is 5 or not
+print (test_result)
+## Ttest_1sampResult(statistic=0.4726549119243793, pvalue=0.6418434574169085)
+p = test_result.pvalue
+alpha = 0.05
+if p > alpha:
+    print('p_value>5%. We fail to reject H0. So the mean is 5.0')
+else:
+    print('p_value<=5%. We reject H0. So the mean is not 5.0')
+## p_value>5%. We fail to reject H0. So the mean is 5.0
+test_result = stats.ttest_1samp(rvs,0.0)# test the mean is 0 or not
+print (test_result)
+## Ttest_1sampResult(statistic=2.6472583269621586, pvalue=0.01589409953787989)
+p = test_result.pvalue
+alpha = 0.05
+if p > alpha:
+    print('p_value={0:.2f} > 0.05. We fail to reject H0. So the mean is 0.0'. format(p))
+else:
+    print('p_value={0:.2f} <= 0.05. We reject H0. So the mean is not 0.0'. format(p))
+## p_value=0.02 <= 0.05. We reject H0. So the mean is not 0.0
+#%%
+import  numpy as np
+from scipy import stats
+np.random.seed(12345678)
+#generate three random samples
+rvs1 = stats.norm.rvs(loc=5,scale=10,size=500)
+#rvs1 has mean of 5 and standard deviation of 10
+rvs2 = stats.norm.rvs(loc=5,scale=10,size=500)
+#rvs2 has mean of 5 and standard deviation of 10
+rvs3 = stats.norm.rvs(loc=5,scale=10,size=400)
+#rvs3 has mean of 5 and standard deviation of 10
+rvs4 = stats.norm.rvs(loc=8, scale=20, size=100)
+#rvs4 has mean of 8 and standard deviation of 20
+test_result = stats.ttest_ind(rvs1,rvs2)
+# test the means of rvs1 and rvs2 equal or not
+# assume the two variances are equal
+p = test_result.pvalue
+alpha = 0.05
+if p > alpha:
+    print('p_value={0:.2f} > 0.05. We fail to reject H0. So the two means are equal'.format(p))
+else:
+    print('p_value={0:.2f} < =0.05. We reject H0. So the two means are not equal'.format(p))
+## p_value=0.79 > 0.05. We fail to reject H0. So the two means are equal
+test_result = stats.ttest_ind(rvs1,rvs2, equal_var = False)
+# test the means of rvs1 and rvs2 equal or not
+# assume unequal variances
+p = test_result.pvalue
+alpha = 0.05
+if p > alpha:
+    print('p_value={0:.2f} > 0.05. We fail to reject H0. So the two means are equal'.format(p))
+else:
+    print('p_value={0:.2f} < =0.05. We reject H0. So the two means are not equal'.format(p))
+    
+## p_value=0.79 > 0.05. We fail to reject H0. So the two means are equal
+test_result = stats.ttest_ind(rvs1,rvs3, equal_var = False)
+# test the means of rvs1 and rvs3 equal or not
+# assume unequal variances
+p = test_result.pvalue
+alpha = 0.05
+if p > alpha:
+    print('p_value={0:.2f} > 0.05. We fail to reject H0. So the two means are equal'.format(p))
+else:
+    print('p_value={0:.2f} < =0.05. We reject H0. So the two means are not equal'.format(p))
+    
+## p_value=0.66 > 0.05. We fail to reject H0. So the two means are equal
+test_result = stats.ttest_ind(rvs1,rvs4, equal_var = False)
+# test the means of rvs1 and rvs4 equal or not
+# assume unequal variances
+p = test_result.pvalue
+alpha = 0.05
+if p > alpha:
+    print('p_value={0:.2f} > 0.05. We fail to reject H0. So the two means are equal'.format(p))
+else:
+    print('p_value={0:.2f} < =0.05. We reject H0. So the two means are not equal'.format(p))
+        
+      
+## p_value=0.00 < =0.05. We reject H0. So the two means are not equal
+#%%
+import  numpy as np
+from scipy import stats
+test_result = stats.ttest_ind_from_stats(mean1=3.35, std1=0.054, nobs1=6, mean2=3.233, std2=0.069, nobs2=6)
+# test the means of the two goups equal or not
+# assume the two variances are equal
+p = test_result.pvalue
+alpha = 0.05
+if p > alpha:
+    print('p_value={0:.2f} > 0.05. We fail to reject H0. So the two means are equal'.format(p))
+else:
+    print('p_value={0:.2f} < =0.05. We reject H0. So the two means are not equal'.format(p))
+## p_value=0.01 < =0.05. We reject H0. So the two means are not equal
+#%%
+import  numpy as np
+from scipy import stats
+before = np.array([136.9,201.4, 166.8, 150.0, 173.2, 169.3])
+#use array form not list 
+#if you're going to perform arithmetic functions to your lists, 
+#you should really be using arrays instead
+after = np.array([130.2, 180.7, 149.6, 153.2, 162.6, 160.1])
+test_result = stats.ttest_rel(before, after)
+# test the means of the two matched goups equal or not
+p = test_result.pvalue
+alpha = 0.05
+if p > alpha:
+    print('p_value={0:.2f} > 0.05. We fail to reject H0. So the two means are equal'.format(p))
+else:
+    print('p_value={0:.2f} < =0.05. We reject H0. So the two means are not equal'.format(p))
+## p_value=0.03 < =0.05. We reject H0. So the two means are not equal
+#%%
