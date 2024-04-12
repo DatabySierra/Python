@@ -1,0 +1,50 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Feb 19 23:18:19 2023
+
+@author: Sierra Henry
+"""
+#%%
+##Problem 1:  Grade Calculation
+##1. Generate 600 random scores for attendance, project, midterm and final respectively.
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+Attendance = np.random.randint(0, 41, 600)
+print(Attendance)
+Project = np.random.randint(0, 201, 600)
+print(Project)
+Midterm = np.random.randint(0, 101, 600)
+print(Midterm)
+Final = np.random.randint(0, 201, 600)
+print(Final)
+score = Attendance + Project + Midterm + Final
+print(score)
+##2. Use if and elif to define a function named as 'lettergrade' to convert a numerical grade to a letter grade,
+def letterGrade(Scores):
+    if Scores >= 90:
+        letter = 'A'
+    elif Scores >= 80:
+        letter = 'B'
+    elif Scores >= 70:
+        letter = 'C'
+    elif Scores >= 60:
+        letter = 'D'
+    else:
+        letter = 'F'
+    return letter
+x = map(letterGrade, score)
+grade=list(x)
+print(grade)
+##3. Use the map function to find the grades for the total score percentages.
+total_score_percentage = score/540 * 100
+print(total_score_percentage)
+##4. Create a data frame called grade which has six columns: attendance, project, midterm, final, total_score_percentage and grade
+grade = pd.DataFrame({'Attendace', 'Project', 'Midterm', 'Final', 'total_score_percentage', 'grade'})
+##5. Plot the bar chart of the letter grades and save the figure as 'week5_grade.png'.
+grade.value_counts().plot.bar()
+plt.show()
+plt.savefig('grade')
+##6. Save the data frame grade to 'week5_grade.csv'
+grade.to_csv('week5_grade.csv')
+#%%
