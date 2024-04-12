@@ -1,0 +1,119 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Feb 24 22:21:01 2023
+
+@author: Sierra Henry
+"""
+#Problem 1
+#1. Generate a series (name it a) with 500 random numbers from the standard normal distribution.
+import pandas as pd
+import numpy as np
+np.random.seed(500)
+a=pd.Series(np.random.rand(500))
+print(a)
+#2. Find the mean, median, var, std( standard deviation), quantile(0.8), sum, prod,  count.
+print(a.mean())
+print(a.median())
+print(a.var())
+print(a.std())
+print(a.quantile(0.8))
+print(a.cumsum())
+print(a.cumprod())
+print(a.count())
+#3. Calculate the descriptive statistics for a data frame.
+print(a.describe())
+#%%
+#Problem 2
+#1. Generate a data frame with shape 100x4 from a normal distribution N(20, 100).
+import pandas as pd
+import numpy as np
+np.random.seed(500)
+df3=pd.DataFrame(np.random.randn(100,4))
+print(df3)
+#2. For all the columns, find the mean, median, mode, var, std( standard deviation), quantile(0.8)
+print(df3.mean())
+print(df3.median())
+print(df3.mode())
+print(df3.var())
+print(df3.std())
+print(df3.quantile(0.8))
+#3. For column 0, find the mean, median, var, std( standard deviation), quantile(0.8)
+print(df3.mean(0))
+print(df3.median(0))
+print(df3.var(0))
+print(df3.std(0))
+print(df3.quantile(0.8))
+#%%
+#Problem 3
+#1. Generate a data frame with the shape (200, 4) from random integers between 1 and 6, inclusive.
+import pandas as pd
+import numpy as np
+np.random.seed(500)
+df4=pd.DataFrame(np.random.uniform(1,7, size=(200,4)), columns=['W','X', 'Y', 'Z'])
+print(df4)
+#2. Calculate the covariance and correlation among the four columns.
+print(df4.cov())
+#3. Calculate the covariance and correlation between the first column and the third column.
+print(df4.W.cov(df4.Y))
+#%%
+#Problem 4
+#1. Generate a data set(spread)with size =500 from a normal distribution with mean 20 and variance 100.
+import matplotlib.pyplot as plt
+np.random.seed(500)
+spread = np.random.normal(20, 100, 500)
+#(mean, var, size)
+print(spread)
+#2. Generate a data set(center)with size =50 with value of 20.
+center= np.ones(50) * 20
+print(center)
+#3. Generate a data set(flier_high)with size =10 from a normal distribution with mean 100 and variance 100.
+flier_high= np.random.normal(100, 100, 10)
+print(flier_high)
+#4. Generate a data set(flier_low)with size =10 from a normal distribution with mean -60 and variance 100.
+flier_low= np.random.normal(-60, 100, 10)
+print(flier_low)
+#5. Concatenate the four arrays(spread, center, flier_high, flier_high, flier_low) to a new data set called 'data'.
+data= np.concatenate((spread, center, flier_high, flier_low), 0)
+print(data)
+#6. Draw the basic boxplot for ‘data’.
+plt.boxplot(data)
+plt.title('basic plot')
+plt.figure()
+#7. Draw the notched boxplot for 'data’
+plt.boxplot(data,1)
+#8. Draw the boxplot for 'data' without outlier points.
+plt.figure()
+plt.boxplot(data, 0, '')
+#9. Draw the histogram of the data.
+plt.figure(figsize=(8,4))
+plt.hist(data)
+plt.title('histogram')
+plt.show()
+#%%
+#Problem 5
+#1. Read data 'DC bike sharing.csv.'
+import pandas as pd
+Dc_bike_sharing_csv=pd.read_csv('DC bike sharing.csv')
+print(Dc_bike_sharing_csv)
+#2. Draw the basic boxplot for the 'temp.'
+temp=Dc_bike_sharing_csv['temp']
+print(temp)
+plt.boxplot(temp)
+plt.title('tempbox')
+plt.show()
+#3. Draw the boxplot for the 'casual' without outlier points.
+casual=Dc_bike_sharing_csv['casual']
+print(casual)
+plt.boxplot(casual)
+plt.title('casualbox')
+plt.show()
+#4. Plot the histogram of 'cnt' with bins=40.
+cnt=Dc_bike_sharing_csv['cnt']
+plt.hist(cnt,bins=40)
+plt.title('cnt_histogram')
+plt.show()
+#5. Plot the histogram of 'season'.
+season=Dc_bike_sharing_csv['season']
+plt.hist(season)
+plt.title('season_histogram')
+plt.show()
